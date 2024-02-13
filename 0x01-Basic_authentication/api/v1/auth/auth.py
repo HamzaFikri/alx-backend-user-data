@@ -1,48 +1,43 @@
 #!/usr/bin/env python3
-""" a class to manage the API authentication."""
+"""Module that manages API authentication"""
 from flask import request
 from typing import List, TypeVar
 
 
-class Auth:
-    """manages API authentication"""
+class Auth():
+    """Class that manages API authentication"""
 
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
-        """
-        returns True if the path is not in the
-        list of strings excluded_paths:
-            Returns True if path is None
-            Returns True if excluded_paths is None or empty
-            Returns False if path is in excluded_paths
-        """
+        """Method that manages authentication"""
 
-        if excluded_paths is None or []:
+        if path is None or excluded_paths is None or not len(excluded_paths):
             return True
-        if path is None:
-            return True
-        if path in excluded_paths or path[-1] != '/' and path + '/'\
-                in excluded_paths:
-            # slash tolerant
+
+        if path[-1] != '/':
+            path += '/'
+
+        for i in excluded_paths:
+            if i.endswith('*'):
+                if path.startswith(i[:-1]):
+                    return False
+
+        if path in excluded_paths:
             return False
-
-        return True
+        else:
+            return True
 
     def authorization_header(self, request=None) -> str:
-        """
-        validate all requests to secure API
-        If request is None, returns None
-        If request doesnt contain header key Authorization, returns None
-        Otherwise, return the value of the header request Authorization
-        """
+        """Funtion that manages authorization header"""
+
         if request is None:
             return None
-        if request.headers.get('Authorization') is None:
+
+        if not request.headers.get("Authorization"):
             return None
-        return request.headers.get('Authorization')
+
+        return request.headers.get("Authorization")
 
     def current_user(self, request=None) -> TypeVar('User'):
-        """
-        returns None
-        request - Flask request object
-        """
+        """ current user """
+
         return None
