@@ -24,18 +24,20 @@ if getenv('AUTH_TYPE') == 'basic_auth':
 
 
 @app.before_request
-def before_request():
-    """filtering each request
-    """
-    lst = ['/api/v1/status/', '/api/v1/unauthorized/', '/api/v1/forbidden/']
-    if auth is None:
-        return
-    if not auth.require_auth(request.path, lst):
-        return
-    if auth.authorization_header(request) is None:
-        abort(401)
-    if auth.current_user(request) is None:
-        abort(403)
+def authentication():
+    """Perform authentication checks before handling each request."""
+    if auth:
+        request.current_user = auth.current_user(request)
+        if auth.require_auth(request.path, ['/api/v1/status/',
+                                            '/api/v1/unauthorized/',
+                                            '/api/v1/forbidden/',
+                                            '/api/v1/auth_session/login/']):
+            if not auth.authorization_header(request) \
+                    and not auth.session_cookie(request):
+                return abort(401)
+            if not auth.current_user(request):
+                return abort(403)
+    return
 
 
 @app.errorhandler(404)
