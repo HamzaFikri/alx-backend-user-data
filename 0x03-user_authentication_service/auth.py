@@ -164,7 +164,8 @@ class Auth:
         # Return the generated password reset token
         return reset_token
 
-     def update_password(self, reset_token: str, password: str):
+
+    def update_password(self, reset_token: str, password: str):
         """Updates users password"""
         try:
             user = self._db.find_user_by(reset_token=reset_token)
