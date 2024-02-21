@@ -84,18 +84,14 @@ class Auth:
             return None
 
     def get_reset_password_token(self, email: str) -> str:
-        """Method that takes email and returns uuid for that user"""
-
+        """ Reset Password Token """
         try:
             user = self._db.find_user_by(email=email)
-
-        except NoResultFound:
-            raise ValueError
-
-        token = _generate_uuid()
-
-        self._db.update_user(user.id, reset_token=token)
-        return token
+            new_token = _generate_uuid()
+            self._db.update_user(user.id, reset_token=new_token)
+            return (new_token)
+        except Exception:
+            raise (ValueError)
 
     def update_password(self, reset_token: str, password: str) -> None:
         """Method that uses reset token to change password of a user"""
