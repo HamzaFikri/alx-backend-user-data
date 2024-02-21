@@ -180,6 +180,7 @@ class Auth:
         """
         # Find user associated with reset_token
         try:
+            
             user = self._db.find_user_by(reset_token=reset_token)
         except NoResultFound:
             # If no user found with given reset_token, raise ValueError
