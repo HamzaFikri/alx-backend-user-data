@@ -17,23 +17,12 @@ logging.disable(logging.WARNING)
 
 
 def _hash_password(password: str) -> bytes:
-    """Hashes a password and returns bytes.
-
-    Args:
-        password (str): The password to be hashed.
-
-    Returns:
-        bytes: The hashed password.
-    """
+    """Hashes a password and returns bytes."""
     return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
 
 
 def _generate_uuid() -> str:
-    """Generates a uuid.
-
-    Returns:
-        str: string representation of a new UUID.
-    """
+    """Generates a uuid."""
     return str(uuid4())
 
 
@@ -45,20 +34,9 @@ class Auth:
         self._db = DB()
 
     def register_user(self, email: str, password: str) -> User:
-        """Registers a new user with the given email and password.
-
-        Args:
-            email (str): The email of the new user.
-            password (str): The password of the new user.
-
-        Returns:
-            User: A User object representing the newly created user.
-
-        Raises:
-            ValueError: If a user with the given email already exists.
-        """
+        """Registers a new user with the given email and password."""
         try:
-            # Search for the user by email
+            
             self._db.find_user_by(email=email)
             # If a user already exist with the passed email, raise a ValueError
             raise ValueError(f"User {email} already exists")
