@@ -36,7 +36,7 @@ class Auth:
     def register_user(self, email: str, password: str) -> User:
         """Registers a new user with the given email and password."""
         try:
-            
+
             self._db.find_user_by(email=email)
             # If a user already exist with the passed email, raise a ValueError
             raise ValueError(f"User {email} already exists")
@@ -167,7 +167,7 @@ class Auth:
 
     def update_password(self, reset_token: str, password: str) -> None:
         """Method that uses reset token to change password of a user"""
-
+        
         try:
             user = self._db.find_user_by(reset_token=reset_token)
 
@@ -176,4 +176,3 @@ class Auth:
 
         newPwd = _hash_password(password)
         self._db.update_user(user.id, hashed_password=newPwd, reset_token=None)
-        
